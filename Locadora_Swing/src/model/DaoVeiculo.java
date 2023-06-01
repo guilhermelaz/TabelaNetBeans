@@ -132,5 +132,38 @@ public class DaoVeiculo {
 
         return resultado;
     }
+    
+    
+    public ArrayList<Veiculo> buscaFiltro(String opc, String filtro) {
+        ArrayList<Veiculo> resultados = new ArrayList<Veiculo>();
+        
+        if (!opc.equals("marca") && !opc.equals("modelo")){
+            return resultados;
+        }
+
+        try {
+            this.conectar();
+            ResultSet rs = st.executeQuery("SELECT * FROM tb_veiculos WHERE " + opc + " LIKE '%"+ filtro +"%';");
+
+            while (rs.next()) {
+                Veiculo v = new Veiculo();
+                v.setCodigo(rs.getInt("codigo"));
+                v.setMarca(rs.getString("marca"));
+                v.setModelo(rs.getString("modelo"));
+                v.setChassi(rs.getString("chassi"));
+                v.setAno(rs.getInt("ano"));
+                resultados.add(v);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            this.desconectar();
+        }
+        return resultados;
+
+    }
+    
+    
+
 
 }
